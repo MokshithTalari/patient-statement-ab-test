@@ -424,7 +424,7 @@
       `In this simulation the redesigned statement cut mean days to pay by <strong>${f2(R.days.diff)} days</strong> ` +
       `(95% CI ${f2(R.days.ci[0])}&ndash;${f2(R.days.ci[1])}), raised 30-day payment by <strong>${f2(R.resolution_30d.diff_pp)} pp</strong>, ` +
       `and lowered the 120-day unpaid rate by <strong>${f2(-R.unpaid.diff_pp)} pp</strong>, with no increase in disputes. ` +
-      `The effect holds at patient level, across age groups and balance tiers.`;
+      `The direction is consistent in the patient-level sensitivity analysis and across the reported age and balance-tier summaries.`;
     document.getElementById('roiNum').textContent = k(R.business_case.one_time_cash_acceleration);
 
     const ages = Object.keys(R.age_resolution_pct).sort();
