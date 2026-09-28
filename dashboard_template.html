@@ -428,20 +428,28 @@
     document.getElementById('roiNum').textContent = k(R.business_case.one_time_cash_acceleration);
 
     const ages = Object.keys(R.age_resolution_pct).sort();
-    const grid = { color: '#334155' }, tick = { color: '#94a3b8' };
-    const opts = { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#cbd5e1' } } }, scales: { x: { grid, ticks: tick }, y: { grid, ticks: tick } } };
+    // Fresh options object per chart: Chart.js mutates the options it is given,
+    // so a shared object leaks resolved axis types from one chart into the next.
+    const opts = (horizontal = false) => ({
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: horizontal ? 'y' : 'x',
+      plugins: { legend: horizontal ? { display: false } : { labels: { color: '#cbd5e1' } } },
+      scales: {
+        x: { type: horizontal ? 'linear' : 'category', beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+        y: { type: horizontal ? 'category' : 'linear', beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+      },
+    });
     const colors = { Control: '#64748b', Treatment: '#38bdf8' };
     const meanDays = R.age_mean_days;
-    new Chart(velocityChart, { type: 'bar', options: opts, data: { labels: ages,
+    new Chart(velocityChart, { type: 'bar', options: opts(), data: { labels: ages,
       datasets: A.map(a => ({ label: a, backgroundColor: colors[a], data: ages.map(g => meanDays[g][a]) })) } });
-    new Chart(resolutionChart, { type: 'bar', options: opts, data: { labels: ages,
+    new Chart(resolutionChart, { type: 'bar', options: opts(), data: { labels: ages,
       datasets: A.map(a => ({ label: a, backgroundColor: a === 'Treatment' ? '#4ade80' : colors[a], data: ages.map(g => R.age_resolution_pct[g][a]) })) } });
     const ch = ['QR_Portal', 'Phone_IVR', 'Mail_Check'];
-    new Chart(channelChart, { type: 'bar', options: opts, data: { labels: ['QR / Mobile', 'Phone IVR', 'Mail Check'],
+    new Chart(channelChart, { type: 'bar', options: opts(), data: { labels: ['QR / Mobile', 'Phone IVR', 'Mail Check'],
       datasets: A.map(a => ({ label: a, backgroundColor: a === 'Treatment' ? '#a855f7' : colors[a], data: ch.map(c => R.channel_share[a][c]) })) } });
     const bc = R.business_case;
-    new Chart(roiChart, { type: 'bar', options: { ...opts, indexAxis: 'y', plugins: { legend: { display: false } } },
+    new Chart(roiChart, { type: 'bar', options: opts(true),
       data: { labels: ['One-time cash acceleration', 'Annual balances no longer unpaid (gross)', 'Annual carrying-cost saving'],
         datasets: [{ backgroundColor: ['#38bdf8', '#4ade80', '#facc15'],
           data: [bc.one_time_cash_acceleration, bc.annual_balances_no_longer_unpaid, bc.annual_carrying_cost_saving].map(x => Math.round(x / 1000)) }] } });
