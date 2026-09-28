@@ -1,0 +1,136 @@
+{
+  "n_statements": {
+    "Control": 24633,
+    "Treatment": 25367
+  },
+  "n_patients": {
+    "Control": 13227,
+    "Treatment": 13423
+  },
+  "srm": {
+    "chi2": 1.441500938086304,
+    "p": 0.22989661041385256
+  },
+  "balance_check": {
+    "mean": {
+      "Control": 216.86644420086876,
+      "Treatment": 217.54341743209682
+    },
+    "sd": {
+      "Control": 191.5563179133929,
+      "Treatment": 190.75637740499013
+    },
+    "t": -0.395891965403651,
+    "p": 0.6921864197187648
+  },
+  "age_balance_p": 0.8278670165968567,
+  "days": {
+    "mean": {
+      "Control": 49.49246808119776,
+      "Treatment": 42.36219763252702
+    },
+    "median": {
+      "Control": 50.0,
+      "Treatment": 42.0
+    },
+    "diff": 7.130270448670736,
+    "ci": [
+      6.868043340523947,
+      7.392497556817524
+    ],
+    "t": 53.29523227509497,
+    "p": 0.0,
+    "mwu_p": 0.0,
+    "patient_level": {
+      "diff": 7.05357186271565,
+      "t": 47.042800583888535,
+      "p": 0.0
+    }
+  },
+  "resolution_30d": {
+    "rate": {
+      "Control": 0.08646937035683838,
+      "Treatment": 0.178302519020775
+    },
+    "diff_pp": 9.183314866393664,
+    "z": 30.226607077637375,
+    "p": 1.0592122090704235e-200
+  },
+  "unpaid": {
+    "rate": {
+      "Control": 0.11606381683108026,
+      "Treatment": 0.0808530768321047
+    },
+    "diff_pp": -3.521073999897556,
+    "z": -13.2273394460685,
+    "p": 6.100898422669743e-40
+  },
+  "dispute": {
+    "rate": {
+      "Control": 0.0330045061502862,
+      "Treatment": 0.027634328064020185
+    },
+    "diff_pp": -0.5370178086266019,
+    "z": -3.503448855763084,
+    "p": 0.00045927484142887343
+  },
+  "channel_share": {
+    "Control": {
+      "Mail_Check": 46.6,
+      "Phone_IVR": 31.3,
+      "QR_Portal": 22.1
+    },
+    "Treatment": {
+      "QR_Portal": 52.6,
+      "Phone_IVR": 26.0,
+      "Mail_Check": 21.4
+    }
+  },
+  "age_days_delta": {
+    "18-35": 7.81,
+    "36-55": 7.22,
+    "56+": 6.32
+  },
+  "age_mean_days": {
+    "18-35": {
+      "Control": 49.29,
+      "Treatment": 41.47
+    },
+    "36-55": {
+      "Control": 49.61,
+      "Treatment": 42.39
+    },
+    "56+": {
+      "Control": 49.51,
+      "Treatment": 43.2
+    }
+  },
+  "age_resolution_pct": {
+    "18-35": {
+      "Control": 8.8,
+      "Treatment": 19.3
+    },
+    "36-55": {
+      "Control": 8.5,
+      "Treatment": 17.9
+    },
+    "56+": {
+      "Control": 8.8,
+      "Treatment": 16.3
+    }
+  },
+  "tier_days_delta": {
+    "High (>$500)": 6.89,
+    "Low (<$150)": 6.81,
+    "Medium ($150-$500)": 7.48
+  },
+  "business_case": {
+    "annual_statement_volume": 120000,
+    "cost_of_capital": 0.08,
+    "note": "Illustrative scenario only; not derived from any real organization.",
+    "annual_self_pay_base": 26065187.975999996,
+    "one_time_cash_acceleration": 509183.1220940289,
+    "annual_carrying_cost_saving": 40734.649767522315,
+    "annual_balances_no_longer_unpaid": 917774.55684736
+  }
+}

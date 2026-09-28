@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Statement A/B Test Simulation | Mokshith Talari</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-card: #1f293d;
+      --border: #374151;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --primary: #38bdf8;
+      --success: #34d399;
+      --purple: #a855f7;
+      --warning: #fbbf24;
+      --danger: #f87171;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .author-badge {
+      text-align: right;
+    }
+    .author-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+    }
+    .author-role {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: #4b5563;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .kpi-card.blue::before { background: var(--primary); }
+    .kpi-card.green::before { background: var(--success); }
+    .kpi-card.purple::before { background: var(--purple); }
+    .kpi-card.yellow::before { background: var(--warning); }
+
+    .kpi-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .kpi-delta {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .kpi-delta.pos { color: var(--success); }
+    .kpi-delta.info { color: var(--primary); }
+    .kpi-delta.warn { color: var(--warning); }
+
+    /* CHARTS SECTION */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .chart-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+
+    /* STATISTICAL SUMMARY TABLE */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #1e293b;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #1f293d;
+      color: #e5e7eb;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tag-sig {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* EXECUTIVE STORY CARD */
+    .executive-card {
+      background: linear-gradient(135deg, #111827 0%, #1e1b4b 100%);
+      border: 1px solid #3730a3;
+      border-radius: 16px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .executive-card { grid-template-columns: 1fr; }
+    }
+
+    .story-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .story-text {
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .roi-highlight {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #4338ca;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .roi-num {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--warning);
+    }
+    .roi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #334155;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #475569; }
+    .btn-primary { background: var(--primary); color: #0f172a; }
+    .btn-primary:hover { background: #7dd3fc; }
+  </style>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="badge">Portfolio case study &middot; Synthetic data</div>
+        <h1>Patient Statement Redesign &amp; Payment Velocity</h1>
+        <div class="subtitle">Simulated A/B test &middot; <span id="nStmt"></span> statements &middot; <span id="nPat"></span> patients randomized at patient level</div>
+      </div>
+      <div class="author-badge">
+        <div class="author-name">Mokshith Talari</div>
+        <div class="author-role">Senior Business Analyst</div>
+      </div>
+    </header>
+
+    <div class="table-card" style="border-left:4px solid #facc15">
+      <strong>About this artifact:</strong> All data is synthetic and generated by <code>generate_dataset.py</code>; the treatment effects are simulation parameters.
+      It demonstrates how I design, test, and report an experiment. It does not reproduce any client or employer result.
+    </div>
+
+    <div class="kpi-grid" id="kpis"></div>
+
+    <div class="charts-grid">
+      <div class="chart-card"><div class="chart-header"><div class="chart-title">Mean Days to Pay by Age Group</div></div>
+        <div class="chart-desc">Paid statements only.</div><div class="chart-container"><canvas id="velocityChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-header"><div class="chart-title">Paid in Full Within 30 Days by Age Group</div></div>
+        <div class="chart-desc">Share of all statements.</div><div class="chart-container"><canvas id="resolutionChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-header"><div class="chart-title">Payment Channel Mix</div></div>
+        <div class="chart-desc">Share of paid statements.</div><div class="chart-container"><canvas id="channelChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-header"><div class="chart-title">Illustrative Business Case ($K)</div></div>
+        <div class="chart-desc">Scenario: 120,000 statements/yr, 8% cost of capital. Components are not additive.</div><div class="chart-container"><canvas id="roiChart"></canvas></div></div>
+    </div>
+
+    <div class="table-card">
+      <h3 style="margin-bottom:14px;font-size:16px;">Experiment Validity &amp; Hypothesis Tests</h3>
+      <div style="overflow-x:auto"><table><thead><tr><th>Check / Metric</th><th>Control</th><th>Treatment</th><th>Test</th><th>Result</th><th>p-value</th></tr></thead>
+      <tbody id="statsBody"></tbody></table></div>
+    </div>
+
+    <div class="executive-card">
+      <div>
+        <div class="story-title">Readout</div>
+        <p class="story-text" id="readout"></p>
+        <p class="story-text"><strong>Recommendation:</strong> roll out the redesigned statement, keep a 5&ndash;10% holdout for one billing cycle to confirm the effect in production, and monitor dispute rate and payment-gateway failures as guardrails.</p>
+      </div>
+      <div class="roi-highlight">
+        <div class="roi-num" id="roiNum"></div>
+        <div class="roi-label">One-time cash acceleration</div>
+        <p style="font-size:11px;color:#94a3b8;margin-top:8px;">Illustrative scenario, not a realized result</p>
+      </div>
+    </div>
+
+    <footer>Mokshith Talari &middot; Portfolio case study &middot; 100% synthetic data &middot; No client, employer, or patient data used</footer>
+  </div>
+
+  <script>
+    const R = /*RESULTS_JSON*/null;
+    const A = ['Control', 'Treatment'];
+    const f1 = x => x.toFixed(1), f2 = x => x.toFixed(2);
+    const pct = x => (100 * x).toFixed(1) + '%';
+    const pv = p => p < 0.001 ? '&lt; 0.001' : p.toFixed(3);
+    const k = x => '$' + Math.round(x / 1000).toLocaleString() + 'K';
+    const sum = o => o.Control + o.Treatment;
+
+    document.getElementById('nStmt').textContent = sum(R.n_statements).toLocaleString();
+    document.getElementById('nPat').textContent = sum(R.n_patients).toLocaleString();
+
+    const kpis = [
+      ['blue', 'Days to Pay (Treatment)', f1(R.days.mean.Treatment) + ' d', `&darr; ${f2(R.days.diff)} d vs control (95% CI ${f2(R.days.ci[0])}&ndash;${f2(R.days.ci[1])})`],
+      ['green', 'Paid Within 30 Days', pct(R.resolution_30d.rate.Treatment), `+${f2(R.resolution_30d.diff_pp)} pp (control ${pct(R.resolution_30d.rate.Control)})`],
+      ['purple', 'QR / Mobile Share', f1(R.channel_share.Treatment.QR_Portal) + '%', `control ${f1(R.channel_share.Control.QR_Portal)}% of paid statements`],
+      ['yellow', 'Unpaid at 120 Days', pct(R.unpaid.rate.Treatment), `${f2(R.unpaid.diff_pp)} pp (control ${pct(R.unpaid.rate.Control)})`],
+    ];
+    document.getElementById('kpis').innerHTML = kpis.map(([c, t, v, d]) =>
+      `<div class="kpi-card ${c}"><div class="kpi-title">${t}</div><div class="kpi-value">${v}</div><div class="kpi-delta pos"><span>${d}</span></div></div>`).join('');
+
+    const rows = [
+      ['Sample ratio (patients)', R.n_patients.Control.toLocaleString(), R.n_patients.Treatment.toLocaleString(), 'Chi-square vs 50/50', R.srm.p > 0.05 ? 'Pass' : 'Investigate', R.srm.p],
+      ['Pre-treatment balance ($)', '$' + f2(R.balance_check.mean.Control), '$' + f2(R.balance_check.mean.Treatment), "Welch's t-test", R.balance_check.p > 0.05 ? 'Balanced' : 'Imbalanced', R.balance_check.p],
+      ['Age mix', '', '', 'Chi-square', R.age_balance_p > 0.05 ? 'Balanced' : 'Imbalanced', R.age_balance_p],
+      ['Days to pay (primary)', f2(R.days.mean.Control), f2(R.days.mean.Treatment), "Welch's t-test", `&minus;${f2(R.days.diff)} d`, R.days.p],
+      ['Days to pay, patient-level', '', '', 'Welch on patient means', `&minus;${f2(R.days.patient_level.diff)} d`, R.days.patient_level.p],
+      ['Days to pay, rank-based', 'median ' + R.days.median.Control, 'median ' + R.days.median.Treatment, 'Mann-Whitney U', 'Consistent', R.days.mwu_p],
+      ['Paid within 30 days', pct(R.resolution_30d.rate.Control), pct(R.resolution_30d.rate.Treatment), 'Two-proportion z', `+${f2(R.resolution_30d.diff_pp)} pp`, R.resolution_30d.p],
+      ['Unpaid at 120 days', pct(R.unpaid.rate.Control), pct(R.unpaid.rate.Treatment), 'Two-proportion z', `${f2(R.unpaid.diff_pp)} pp`, R.unpaid.p],
+      ['Dispute rate (guardrail)', pct(R.dispute.rate.Control), pct(R.dispute.rate.Treatment), 'Two-proportion z', R.dispute.diff_pp <= 0 ? 'Not worse' : 'Worse', R.dispute.p],
+    ];
+    document.getElementById('statsBody').innerHTML = rows.map(r =>
+      `<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${pv(r[5])}</td></tr>`).join('');
+
+    document.getElementById('readout').innerHTML =
+      `In this simulation the redesigned statement cut mean days to pay by <strong>${f2(R.days.diff)} days</strong> ` +
+      `(95% CI ${f2(R.days.ci[0])}&ndash;${f2(R.days.ci[1])}), raised 30-day payment by <strong>${f2(R.resolution_30d.diff_pp)} pp</strong>, ` +
+      `and lowered the 120-day unpaid rate by <strong>${f2(-R.unpaid.diff_pp)} pp</strong>, with no increase in disputes. ` +
+      `The effect holds at patient level, across age groups and balance tiers.`;
+    document.getElementById('roiNum').textContent = k(R.business_case.one_time_cash_acceleration);
+
+    const ages = Object.keys(R.age_resolution_pct).sort();
+    const grid = { color: '#334155' }, tick = { color: '#94a3b8' };
+    const opts = { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#cbd5e1' } } }, scales: { x: { grid, ticks: tick }, y: { grid, ticks: tick } } };
+    const colors = { Control: '#64748b', Treatment: '#38bdf8' };
+    const meanDays = R.age_mean_days;
+    new Chart(velocityChart, { type: 'bar', options: opts, data: { labels: ages,
+      datasets: A.map(a => ({ label: a, backgroundColor: colors[a], data: ages.map(g => meanDays[g][a]) })) } });
+    new Chart(resolutionChart, { type: 'bar', options: opts, data: { labels: ages,
+      datasets: A.map(a => ({ label: a, backgroundColor: a === 'Treatment' ? '#4ade80' : colors[a], data: ages.map(g => R.age_resolution_pct[g][a]) })) } });
+    const ch = ['QR_Portal', 'Phone_IVR', 'Mail_Check'];
+    new Chart(channelChart, { type: 'bar', options: opts, data: { labels: ['QR / Mobile', 'Phone IVR', 'Mail Check'],
+      datasets: A.map(a => ({ label: a, backgroundColor: a === 'Treatment' ? '#a855f7' : colors[a], data: ch.map(c => R.channel_share[a][c]) })) } });
+    const bc = R.business_case;
+    new Chart(roiChart, { type: 'bar', options: { ...opts, indexAxis: 'y', plugins: { legend: { display: false } } },
+      data: { labels: ['One-time cash acceleration', 'Annual balances no longer unpaid (gross)', 'Annual carrying-cost saving'],
+        datasets: [{ backgroundColor: ['#38bdf8', '#4ade80', '#facc15'],
+          data: [bc.one_time_cash_acceleration, bc.annual_balances_no_longer_unpaid, bc.annual_carrying_cost_saving].map(x => Math.round(x / 1000)) }] } });
+  </script>
+</body>
+</html>
