@@ -585,7 +585,7 @@
       datasets: A.map(a => ({ label: a, backgroundColor: a === 'Treatment' ? '#a855f7' : colors[a], data: ch.map(c => R.channel_share[a][c]) })) } });
     const bc = R.business_case;
     new Chart(roiChart, { type: 'bar', options: opts(true),
-      data: { labels: ['One-time cash acceleration', 'Annual balances no longer unpaid (gross)', 'Annual carrying-cost saving'],
+      data: { labels: [['One-time cash', 'acceleration'], ['Annual balances no', 'longer unpaid (gross)'], ['Annual carrying-', 'cost saving']],
         datasets: [{ backgroundColor: ['#38bdf8', '#4ade80', '#facc15'],
           data: [bc.one_time_cash_acceleration, bc.annual_balances_no_longer_unpaid, bc.annual_carrying_cost_saving].map(x => Math.round(x / 1000)) }] } });
   </script>
