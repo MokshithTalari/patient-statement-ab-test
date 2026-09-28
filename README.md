@@ -1,8 +1,8 @@
 # Patient Statement Redesign: A/B Test Simulation
 
-[![pipeline](https://github.com/YOUR-GITHUB-USERNAME/patient-statement-ab-test/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR-GITHUB-USERNAME/patient-statement-ab-test/actions/workflows/ci.yml)
+[![pipeline](https://github.com/MokshithTalari/patient-statement-ab-test/actions/workflows/ci.yml/badge.svg)](https://github.com/MokshithTalari/patient-statement-ab-test/actions/workflows/ci.yml)
 
-**Live dashboard:** https://YOUR-GITHUB-USERNAME.github.io/patient-statement-ab-test/
+**Live dashboard:** https://MokshithTalari.github.io/patient-statement-ab-test/
 
 **Author:** Mokshith Talari, Senior Business Analyst
 **Stack:** Python (pandas, NumPy, SciPy, matplotlib, seaborn), Jupyter, Chart.js
