@@ -37,7 +37,8 @@ nb.cells = [
        "reported separately and should not be summed."),
     code("pd.Series(r['business_case'])"),
     md("## 6. Recommendation and limitations\n"
-       "- Roll out, keeping a 5-10% holdout for one billing cycle to confirm the effect in production.\n"
+       "- Results of this magnitude would satisfy the stated numerical decision thresholds; a production rollout decision would use inference aligned to the patient-level randomization. This simulation demonstrates the method and is not evidence for an actual rollout.\n"
+       "- The primary test is statement-level; because randomization is by patient, a production analysis would make patient-level or clustered inference (cluster-robust SEs, GEE, or mixed models) primary.\n"
        "- The statement bundles three changes (layout, QR, payment plan); a follow-up factorial test would isolate each.\n"
        "- Real data would add seasonality, payer adjudication lag, and right-censoring; a survival model "
        "(Kaplan-Meier / Cox) would handle unpaid balances better than dropping them from the days-to-pay mean."),

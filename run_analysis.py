@@ -2,8 +2,9 @@
 run_analysis.py
 ---------------
 End-to-end analysis of the SIMULATED patient-statement A/B test.
-Writes every reported number to results.json so the dashboard, infographic,
-README and notebook all read from one source (no hand-typed figures).
+Writes all results to results.json; the dashboard, infographic and README read
+that file, and the notebook recomputes the same results via analyze().
+Scenario assumptions are in ASSUMPTIONS below.
 """
 
 import json
@@ -66,7 +67,7 @@ def analyze(df: pd.DataFrame) -> dict:
                  "t": welch.statistic, "p": welch.pvalue}
     u = stats.mannwhitneyu(c, t, alternative="two-sided")
     r["days"]["mwu_p"] = u.pvalue
-    # Cluster-robust check: collapse to one mean per patient
+    # Patient-level sensitivity analysis: one mean per patient (the randomization unit)
     pm = paid.groupby(["patient_id", "cohort_group"]).days_to_pay.mean().reset_index()
     pc, pt = (pm.loc[pm.cohort_group == a, "days_to_pay"] for a in ARMS)
     pw = stats.ttest_ind(pc, pt, equal_var=False)
@@ -164,7 +165,7 @@ def report(r: dict) -> None:
     print(f"Balance check p={r['balance_check']['p']:.3f} | Age balance p={r['age_balance_p']:.3f}")
     print(f"Days to pay: C {d['mean']['Control']:.2f} vs T {d['mean']['Treatment']:.2f} | "
           f"diff {d['diff']:.2f} [95% CI {d['ci'][0]:.2f}, {d['ci'][1]:.2f}] | Welch p={d['p']:.2e}")
-    print(f"  Patient-level (cluster-robust) diff {d['patient_level']['diff']:.2f}, p={d['patient_level']['p']:.2e}")
+    print(f"  Patient-level sensitivity diff {d['patient_level']['diff']:.2f}, p={d['patient_level']['p']:.2e}")
     for k in ["resolution_30d", "unpaid", "dispute"]:
         m = r[k]
         print(f"{k}: C {100*m['rate']['Control']:.2f}% vs T {100*m['rate']['Treatment']:.2f}% "

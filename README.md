@@ -20,7 +20,7 @@
 | `figures/executive_summary_infographic.png` | One-slide executive summary |
 | `patient_billing_ab_test.ipynb` | Executed notebook: design, checks, results, limitations |
 | `PRD.md` | Requirements: hypothesis, metrics, guardrails, data dictionary |
-| `tests/` + `.github/workflows/ci.yml` | CI rebuilds every artifact and runs integrity tests on each push |
+| `tests/` + `.github/workflows/ci.yml` | CI rebuilds data, results, figures, dashboard, README and notebook, then runs integrity tests on each push |
 
 ## Experiment design
 
@@ -46,7 +46,7 @@
 | Dispute rate (guardrail) | 3.30% | 2.76% | -0.54 pp | < 0.001 (not worse) |
 | QR/mobile share (paid) | 22.1% | 52.6% | | |
 
-Tests: Welch's t-test (primary), Welch on patient-level means (clustering robustness), Mann-Whitney U
+Tests: Welch's t-test (primary), Welch on patient-level means (sensitivity analysis at the randomization unit), Mann-Whitney U
 (skew robustness), two-proportion z-tests (rates), chi-square (sample ratio, age balance).
 
 ## Illustrative business case

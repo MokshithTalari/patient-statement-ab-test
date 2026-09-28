@@ -21,7 +21,7 @@ Working hypothesis: statement confusion and payment friction, not unwillingness 
 
 A redesigned statement with (1) a plain-language breakdown of insurance coverage vs. patient balance, (2) a QR code linking to mobile payment, (3) a 3-click interest-free payment plan.
 
-## 3. Success metrics (set before analysis)
+## 3. Success metrics and decision rules
 
 | Type | Metric | Decision rule |
 |---|---|---|
@@ -41,7 +41,7 @@ A redesigned statement with (1) a plain-language breakdown of insurance coverage
 | Sample | 50,000 statements (~26,600 patients), 90-day issue window, 120-day observation window |
 | Power | alpha 0.05 two-sided, power 0.80, MDE 1.2 days, SD ~14.5 -> ~2,300 statements/arm required |
 | Validity checks | Sample-ratio mismatch (chi-square); pre-treatment balance (Welch t); age mix (chi-square) |
-| Primary test | Welch's t-test; robustness: patient-level means (clustering) and Mann-Whitney U (skew) |
+| Primary test | Welch's t-test; sensitivity: Welch on patient-level means (randomization unit) and Mann-Whitney U (skew) |
 | Rate tests | Two-proportion z-test |
 
 ## 5. Data dictionary
