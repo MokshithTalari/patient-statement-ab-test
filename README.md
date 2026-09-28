@@ -79,4 +79,4 @@ python build_readme.py              # this README
 pytest -q                           # integrity tests
 ```
 
-Every number in the dashboard, infographic, notebook, and README is read from `results.json`; none is typed by hand.
+All results in the dashboard, infographic, and README are read from `results.json`, which `run_analysis.py` generates; the notebook recomputes them with the same `analyze()` function. Design parameters and scenario assumptions are documented in `PRD.md` and `run_analysis.py`.
